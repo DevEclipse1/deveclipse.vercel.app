@@ -88,7 +88,7 @@ app.get("/posts", async (req, res) => {
             });
         });
 
-        res.type('html').send(content);
+        res.type('html').send("HI");
     });
 });
 
