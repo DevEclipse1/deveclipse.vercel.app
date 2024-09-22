@@ -90,7 +90,7 @@ app.get("/posts", async (req, res) => {
             querySnapshot.forEach(doc => {
                 const post = doc.data();
                 
-                content += `<div><h2>${post.title}</h2><p>${post.body}</p></div>`;
+                content += `<div><h2>${post.title}</h2><p>${post.content}</p></div>`;
             });
 
             res.type('html').send(content);
