@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const firebase = require("firebase-admin")
 
+const serviceAccount = require(path.join(process.cwd(), "firebase.json"));
 const firebase_config = {
     apiKey:process.env.FB_API_KEY,
     authDomain:process.env.FB_AUTH_DOMAIN,
@@ -14,7 +15,10 @@ const firebase_config = {
     measurementId:process.env.FB_MEASURE_ID,
     databaseURL:"https://deveclipse-5ad77-default-rtdb.europe-west1.firebasedatabase.app"
 };
-firebase.initializeApp(firebase_config);
+firebaseAdmin.initializeApp({
+    credential: firebaseAdmin.credential.cert(serviceAccount),
+    databaseURL: "https://deveclipse-5ad77-default-rtdb.europe-west1.firebasedatabase.app"
+});
 const db = firebase.firestore();
 console.log(db);
 

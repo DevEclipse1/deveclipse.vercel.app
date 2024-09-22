@@ -1,3 +1,4 @@
 .env
 .vercel
+firebase.json
 node_modules
