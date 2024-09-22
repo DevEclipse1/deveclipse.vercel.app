@@ -31,6 +31,36 @@ app.get("/dashboard", (req, res) => {
     }
 });
 
+app.get("/create_post", (req, res) => {
+    const password = req.query.password;
+    const title = req.query.title;
+    const content = req.query.content;
+    if (password === process.env.ADMIN_PASSWORD) {
+        fs.writeFile(title+".html",content,(err) => {
+            if(err)
+            {
+                res.json({
+                    "code":"failed",
+                    "message":err.message
+                });
+
+                return;
+            }
+            else
+            {
+                res.json({
+                    "code":"success",
+                    "message":"sucessfully created post",
+                    "title":title,
+                    "content":content
+                });
+            }
+        });
+    } else {
+        res.status(403).send("Forbidden");
+    }
+});
+
 app.listen(3001, err => {
     if (err) console.log(err);
     console.log("Listening on port 3001");
