@@ -47,17 +47,22 @@ app.get("/dashboard", (req, res) => {
 });
 
 app.get("/create_post", (req, res) => {
+    console.log("Create post request received"); // Log when request is received
+
     const password = req.query.password;
     const title = req.query.title;
     const content = req.query.content;
 
     if (password === process.env.ADMIN_PASSWORD) {
+        console.log("Password correct, proceeding to create post...");
+
         const postRef = ref(fb_db, "posts/" + Date.now());
         set(postRef, {
             title: title,
             content: content
         })
         .then(() => {
+            console.log("Post created successfully");
             res.send("Post created successfully.");
         })
         .catch((err) => {
