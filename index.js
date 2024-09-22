@@ -16,6 +16,18 @@ app.get("*", (req, res) => {
     });
 });
 
+app.get("/dashboard", (req, res) => {
+    const password = req.query.password;
+    if (password == process.env.password)
+    {
+        
+    }
+    else
+    {
+        res.statusCode(404).send("Forbidden");
+    }
+});
+
 app.listen(80, err => {
     if (err) console.log(err);
     console.log("Listening on port 80"); 

@@ -6,6 +6,17 @@
     <title>Deveclipse's blog</title>
 </head>
 <body>
-    <strong>Hello, World! From index.html</strong>
+    <form id="loginForm">
+        <input id="password" type="password">
+        <input id="login" type="submit">
+    </form>
+
+    <script>
+        function callback(event) {
+            event.preventDefault();
+            window.location = `/dashboard?password=${document.getElementById("password").value}`;
+        }
+        document.getElementById("loginForm").addEventListener("submit", callback, false);
+    </script>
 </body>
 </html>
