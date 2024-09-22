@@ -6,7 +6,7 @@ const path = require("path");
 const app = express();
 app.use(express.json());
 
-app.get("*", (req, res) => {
+app.get("/", (req, res) => {
     const filePath = path.join(process.cwd(), 'index.html');
     fs.readFile(filePath, 'utf8', (err, file) => {
         if (err) {
@@ -20,7 +20,13 @@ app.get("/dashboard", (req, res) => {
     const password = req.query.password;
     if (password == process.env.password)
     {
-        
+        const filePath = path.join(process.cwd(), 'dashboard.html');
+        fs.readFile(filePath, 'utf8', (err, file) => {
+            if (err) {
+                return res.status(500).send('Internal Server Error');
+            }
+            res.type('html').send(file);
+        });
     }
     else
     {
