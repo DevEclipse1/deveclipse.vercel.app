@@ -7,6 +7,7 @@
 </head>
 <body>
     <form id="form">
+        <input id="password" type="text">
         <input id="title" type="text">
         <input id="content" type="text">
         <input id="submit" type="submit">
@@ -15,7 +16,7 @@
     <script>
         function callback(event) {
             event.preventDefault();
-            window.location = `/create_post?password=${document.getElementById("password").value}&title=${document.getElementById("title").value}&title=${document.getElementById("content").value}`;
+            window.location = `/create_post?password=${document.getElementById("password").value}&title=${document.getElementById("title").value}&content=${document.getElementById("content").value}`;
         }
         document.getElementById("form").addEventListener("submit", callback, false);
     </script>
