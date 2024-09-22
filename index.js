@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const firebase = require("firebase")
+//const firebase = require("firebase")
 
 /*
 const firebase_config = {
