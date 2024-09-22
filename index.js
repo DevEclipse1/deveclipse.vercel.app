@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const url = require('url');
 
 const app = express();
 app.use(express.json());
@@ -25,7 +24,6 @@ app.get("/dashboard", (req, res) => {
             if (err) {
                 return res.status(500).send('Internal Server Error');
             }
-            res.redirect(url.parse(req.url).pathname);
             res.type('html').send(file);
         });
     } else {
