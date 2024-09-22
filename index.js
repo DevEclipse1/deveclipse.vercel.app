@@ -88,7 +88,6 @@ app.get("/posts", async (req, res) => {
             });
         });
 
-        content = content.replace("<!-- POSTS_PLACEHOLDER -->", postsContent);
         res.type('html').send(content);
     });
 });
