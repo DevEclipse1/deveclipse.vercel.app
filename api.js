@@ -61,7 +61,7 @@ app.get("/create_post", (req, res) => {
     }
 });
 
-app.listen(3001, err => {
+app.listen(80, err => {
     if (err) console.log(err);
-    console.log("Listening on port 3001");
+    console.log("Listening on port 80");
 });
