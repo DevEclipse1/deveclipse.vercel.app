@@ -46,13 +46,23 @@ app.get("/dashboard", (req, res) => {
     }
 });
 
-app.get("/create_post", (req, res) => {
+app.get("/create_post", async (req, res) => {
     const password = req.query.password;
     const title = req.query.title;
     const content = req.query.content;
 
     if (password === process.env.ADMIN_PASSWORD) {
-        
+        try {
+            const newPost = {
+                title: title,
+                content: content,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            const docRef = await db.collection("posts").add(newPost);
+            res.status(200).send(`Post created with ID: ${docRef.id}`);
+        } catch (error) {
+            res.status(500).send("Error creating post: " + error.message);
+        }
     } else {
         res.status(403).send("Forbidden");
     }
