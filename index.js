@@ -81,13 +81,11 @@ app.get("/posts", async (req, res) => {
         if (err) {
             return res.status(500).send('Internal Server Error');
         }
-        let content = file;
-        const snapshot = await db.collection("posts").get();
-        let postsContent = '';
 
-        snapshot.forEach(doc => {
-            const postData = doc.data();
-            postsContent += `<div><h2>${postData.title}</h2><p>${postData.body}</p></div>`;
+        db.collection("posts").get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                console.log(doc.id, " => ", doc.data());
+            });
         });
 
         content = content.replace("<!-- POSTS_PLACEHOLDER -->", postsContent);
