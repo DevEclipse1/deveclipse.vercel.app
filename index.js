@@ -60,10 +60,10 @@ app.get("/create_post", async (req, res) => {
 
     if (password === process.env.ADMIN_PASSWORD) {
         try {
-            const docRef = db.collection('posts').doc(title);
+            const docRef = db.collection('posts').doc(encodeURIComponent(title));
             await docRef.set({
-                title: title,
-                content: content
+                title: encodeURIComponent(title),
+                content: encodeURIComponent(content)
             });
             res.send("Created post");
         } catch (error) {
@@ -90,7 +90,7 @@ app.get("/posts", async (req, res) => {
             querySnapshot.forEach(doc => {
                 const post = doc.data();
                 
-                content += `<div><h2>${post.title}</h2><p>${post.content}</p></div>`;
+                content += `<div><h2>${decodeURIComponent(post.title)}</h2><p>${decodeURIComponent(post.content)}</p></div>`;
             });
 
             res.type('html').send(content);
