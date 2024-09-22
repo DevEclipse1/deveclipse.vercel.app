@@ -60,13 +60,12 @@ app.get("/create_post", async (req, res) => {
 
     if (password === process.env.ADMIN_PASSWORD) {
         try {
-            const docRef = db.collection('yourCollection').doc('yourDocId');
+            const docRef = db.collection('posts').doc(title);
             await docRef.set({
                 title: title,
                 content: content
             });
-            console.log('Document created successfully');
-            res.send("Document created successfully");
+            res.send("Created post");
         } catch (error) {
             console.error(error);
             res.status(500).send('Internal Server Error');
