@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 
 app.get("/dashboard", (req, res) => {
     const password = req.query.password;
-    if (password === process.env.ADMIN_PASSWORD) {
+    if (password === process.env.password) {
         const filePath = path.join(process.cwd(), 'dashboard.html');
         fs.readFile(filePath, 'utf8', (err, file) => {
             if (err) {
@@ -31,7 +31,7 @@ app.get("/dashboard", (req, res) => {
     }
 });
 
-app.listen(80, err => {
+app.listen(3001, err => {
     if (err) console.log(err);
-    console.log("Listening on port 80");
+    console.log("Listening on port 3001");
 });
