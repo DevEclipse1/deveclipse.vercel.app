@@ -18,8 +18,7 @@ app.get("/", (req, res) => {
 
 app.get("/dashboard", (req, res) => {
     const password = req.query.password;
-    if (password == process.env.password)
-    {
+    if (password === process.env.password) {
         const filePath = path.join(process.cwd(), 'dashboard.html');
         fs.readFile(filePath, 'utf8', (err, file) => {
             if (err) {
@@ -27,14 +26,12 @@ app.get("/dashboard", (req, res) => {
             }
             res.type('html').send(file);
         });
-    }
-    else
-    {
-        res.statusCode(404).send("Forbidden");
+    } else {
+        res.status(403).send("Forbidden");
     }
 });
 
 app.listen(80, err => {
     if (err) console.log(err);
-    console.log("Listening on port 80"); 
+    console.log("Listening on port 80");
 });
