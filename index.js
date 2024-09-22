@@ -75,6 +75,26 @@ app.get("/create_post", async (req, res) => {
     }
 });
 
+app.get("/posts", async (req, res) => {
+    const filePath = path.join(process.cwd(), 'posts.html');
+    fs.readFile(filePath, 'utf8', async (err, file) => {
+        if (err) {
+            return res.status(500).send('Internal Server Error');
+        }
+        let content = file;
+        const snapshot = await db.collection("posts").get();
+        let postsContent = '';
+
+        snapshot.forEach(doc => {
+            const postData = doc.data();
+            postsContent += `<div><h2>${postData.title}</h2><p>${postData.body}</p></div>`;
+        });
+
+        content = content.replace("<!-- POSTS_PLACEHOLDER -->", postsContent);
+        res.type('html').send(content);
+    });
+});
+
 const PORT = 80
 app.listen(PORT, (err) => {
     if (err) {

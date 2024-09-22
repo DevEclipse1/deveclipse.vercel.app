@@ -7,8 +7,8 @@
 </head>
 <body>
     <form id="loginForm">
-        <input id="password" type="password">
-        <input id="login" type="submit">
+        <input id="password" type="password" placeholder="Password">
+        <input id="login" type="submit" value="Enter Admin Panel">
     </form>
 
     <script>
@@ -17,6 +17,13 @@
             window.location = `/dashboard?password=${document.getElementById("password").value}`;
         }
         document.getElementById("loginForm").addEventListener("submit", callback, false);
+
+        function view_posts()
+        {
+            window.location = "/posts"
+        }
     </script>
+
+    <button onclick="view_posts()">View Posts</button>
 </body>
 </html>
