@@ -23,6 +23,7 @@ const credentials = {
 admin.initializeApp({
     credential: admin.credential.cert(credentials)
 });
+const db = admin.firestore();
 
 const app = express();
 app.use(express.json());
@@ -58,7 +59,16 @@ app.get("/create_post", async (req, res) => {
     const content = req.query.content;
 
     if (password === process.env.ADMIN_PASSWORD) {
+        const createDocument = async () => {
+            const docRef = db.collection('yourCollection').doc('yourDocId');
+            await docRef.set({
+                field1: 'value1',
+                field2: 'value2'
+            });
+            console.log('Document created successfully');
+        };
         
+        createDocument().catch(console.error);
     } else {
         res.status(403).send("Forbidden");
     }
