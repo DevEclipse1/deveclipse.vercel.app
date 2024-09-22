@@ -90,8 +90,14 @@ app.get("/posts", async (req, res) => {
             querySnapshot.forEach(doc => {
                 const post = doc.data();
                 
-                content += `<div><h2>${decodeURIComponent(post.title)}</h2><p>${decodeURIComponent(post.content)}</p></div>`;
-            });
+                content += 
+                `<a href="/post?id=${encodeURIComponent(post.title)}" style="text-decoration: none;">
+                    <div style="display: inline-block; margin-right: 20px; background: #73737d; border-radius: 10px; padding: 20px">
+                        <h2 style="margin: 0;">${decodeURIComponent(post.title)}</h2>
+                        <p style="margin: 0;">${decodeURIComponent(post.content).split(' ').slice(0, 10).join(' ')}...</p>
+                    </div>
+                </a>`;
+             });
 
             res.type('html').send(content);
         } catch (error) {
@@ -99,6 +105,36 @@ app.get("/posts", async (req, res) => {
         }
     });
 });
+
+app.get("/post", async (req, res) => {
+    const filePath = path.join(process.cwd(), 'post.html');
+
+    try {
+        const file = await fs.promises.readFile(filePath, 'utf8');
+        let content = file;
+
+        const postId = req.query.id;
+
+        if (!postId) {
+            return res.status(400).send('Post ID is required');
+        }
+
+        const doc = await db.collection("posts").doc(postId).get();
+
+        if (!doc.exists) {
+            return res.status(404).send('Post not found');
+        }
+
+        const post = doc.data();
+        content = content.replace(/{{title}}/g, decodeURIComponent(post.title || 'No Title'))
+                        .replace(/{{body}}/g, decodeURIComponent(post.content || 'No Content'));
+
+        res.type('html').send(content);
+    } catch (err) {
+        res.status(500).send('Internal Server Error: ' + err.message);
+    }
+});
+
 
 const PORT = 80
 app.listen(PORT, (err) => {
