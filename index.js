@@ -82,13 +82,15 @@ app.get("/posts", async (req, res) => {
             return res.status(500).send('Internal Server Error');
         }
 
+        let content = file;
+
         db.collection("posts").get().then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
-                console.log(doc.id, " => ", doc.data());
+                content += doc.data();
             });
         });
 
-        res.type('html').send("HI");
+        res.type('html').send(content);
     });
 });
 
