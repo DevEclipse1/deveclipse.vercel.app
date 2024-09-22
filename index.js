@@ -59,16 +59,18 @@ app.get("/create_post", async (req, res) => {
     const content = req.query.content;
 
     if (password === process.env.ADMIN_PASSWORD) {
-        const createDocument = async () => {
+        try {
             const docRef = db.collection('yourCollection').doc('yourDocId');
             await docRef.set({
-                field1: 'value1',
-                field2: 'value2'
+                title: title,
+                content: content
             });
             console.log('Document created successfully');
-        };
-        
-        createDocument().catch(console.error);
+            res.send("Document created successfully");
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Internal Server Error');
+        }
     } else {
         res.status(403).send("Forbidden");
     }
