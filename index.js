@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 
 app.get("/dashboard", (req, res) => {
     const password = req.query.password;
-    if (password === process.env.password) {
+    if (password === process.env.ADMIN_PASSWORD) {
         const filePath = path.join(process.cwd(), 'dashboard.html');
         fs.readFile(filePath, 'utf8', (err, file) => {
             if (err) {
