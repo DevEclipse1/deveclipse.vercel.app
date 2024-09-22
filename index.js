@@ -8,11 +8,11 @@ app.use(express.json());
 
 app.get("*", (req, res) => {
     const filePath = path.join(process.cwd(), 'index.html');
-    fs.readFile(filePath, (err, file) => {
+    fs.readFile(filePath, 'utf8', (err, file) => {
         if (err) {
             return res.status(500).send('Internal Server Error');
         }
-        res.send(file);
+        res.type('html').send(file);
     });
 });
 
