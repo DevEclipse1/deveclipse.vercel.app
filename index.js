@@ -88,7 +88,11 @@ app.get("/posts", async (req, res) => {
         try {
             const querySnapshot = await db.collection("posts").get();
             const posts = querySnapshot.docs.map(doc => doc.data());
-            content += posts.join(''); // assuming the posts are in string format
+
+            posts.forEach(post => {
+                content += `<div><h2>${post.title}</h2><p>${post.body}</p></div>`;
+            });
+
             res.type('html').send(content);
         } catch (error) {
             res.status(500).send('Error fetching posts');
