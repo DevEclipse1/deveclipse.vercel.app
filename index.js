@@ -2,24 +2,23 @@ require("dotenv").config();
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const { initializeApp } = require("firebase/app");
-const { getDatabase, ref, set } = require("firebase/database");
+const firebase = require("firebase")
+
+const firebase_config = {
+    apiKey:process.env.FB_API_KEY,
+    authDomain:process.env.FB_AUTH_DOMAIN,
+    projectId:process.env.FB_PROJ_ID,
+    storageBucket:process.env.FB_STORAGE_BUCKET,
+    messagingSenderId:process.env.FB_MSG_SENDER_ID,
+    appId:process.env.FB_APP_ID,
+    measurementId:process.env.FB_MEASURE_ID,
+    databaseURL:"https://deveclipse-5ad77-default-rtdb.europe-west1.firebasedatabase.app"
+};
+firebase.initializeApp(firebase_config);
+const db = firebase.firestore();
 
 const app = express();
 app.use(express.json());
-
-const fb_config = {
-    apiKey: process.env.FB_API_KEY,
-    authDomain: process.env.FB_AUTH_DOMAIN,
-    projectId: process.env.FB_PROJ_ID,
-    storageBucket: process.env.FB_STORAGE_BUCKET,
-    messagingSenderId: process.env.FB_MSG_SENDER_ID,
-    appId: process.env.FB_APP_ID,
-    measurementId: process.env.FB_MEASURE_ID
-};
-
-const fb_app = initializeApp(fb_config);
-const fb_db = getDatabase(fb_app);
 
 app.get("/", (req, res) => {
     const filePath = path.join(process.cwd(), 'index.html');
@@ -47,28 +46,12 @@ app.get("/dashboard", (req, res) => {
 });
 
 app.get("/create_post", (req, res) => {
-    console.log("Create post request received"); // Log when request is received
-
     const password = req.query.password;
     const title = req.query.title;
     const content = req.query.content;
 
     if (password === process.env.ADMIN_PASSWORD) {
-        console.log("Password correct, proceeding to create post...");
-
-        const postRef = ref(fb_db, "posts/" + Date.now());
-        set(postRef, {
-            title: title,
-            content: content
-        })
-        .then(() => {
-            console.log("Post created successfully");
-            res.send("Post created successfully.");
-        })
-        .catch((err) => {
-            console.error("Error creating post:", err);
-            res.status(500).send("Error creating post.");
-        });
+        
     } else {
         res.status(403).send("Forbidden");
     }
