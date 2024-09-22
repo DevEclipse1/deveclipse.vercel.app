@@ -77,6 +77,7 @@ app.get("/create_post", async (req, res) => {
 
 app.get("/posts", async (req, res) => {
     const filePath = path.join(process.cwd(), 'posts.html');
+    
     fs.readFile(filePath, 'utf8', async (err, file) => {
         if (err) {
             return res.status(500).send('Internal Server Error');
@@ -84,13 +85,14 @@ app.get("/posts", async (req, res) => {
 
         let content = file;
 
-        db.collection("posts").get().then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-                content += doc.data();
-            });
-        });
-
-        res.type('html').send(content);
+        try {
+            const querySnapshot = await db.collection("posts").get();
+            const posts = querySnapshot.docs.map(doc => doc.data());
+            content += posts.join(''); // assuming the posts are in string format
+            res.type('html').send(content);
+        } catch (error) {
+            res.status(500).send('Error fetching posts');
+        }
     });
 });
 
