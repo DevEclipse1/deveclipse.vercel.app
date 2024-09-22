@@ -89,9 +89,8 @@ app.get("/posts", async (req, res) => {
             const querySnapshot = await db.collection("posts").get();
             const posts = querySnapshot.docs.map(doc => doc.data());
 
-            posts.forEach(post => {
-                content += `<div><h2>${post.title}</h2><p>${post.body}</p></div>`;
-            });
+            // Convert posts to a readable JSON format for now
+            content += `<pre>${JSON.stringify(posts, null, 2)}</pre>`;
 
             res.type('html').send(content);
         } catch (error) {
