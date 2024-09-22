@@ -4,7 +4,6 @@ const fs = require("fs");
 const path = require("path");
 const firebase = require("firebase-admin")
 
-/*
 const firebase_config = {
     apiKey:process.env.FB_API_KEY,
     authDomain:process.env.FB_AUTH_DOMAIN,
@@ -16,7 +15,8 @@ const firebase_config = {
     databaseURL:"https://deveclipse-5ad77-default-rtdb.europe-west1.firebasedatabase.app"
 };
 firebase.initializeApp(firebase_config);
-const db = firebase.firestore();*/
+const db = firebase.firestore();
+console.log(db);
 
 const app = express();
 app.use(express.json());
