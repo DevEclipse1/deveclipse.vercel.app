@@ -39,7 +39,7 @@ app.get("/", async (req, res) => {
         const topbar = await readTopbar();
         res.type('html').send(topbar + file);
     } catch (err) {
-        res.status(500).send('Internal Server Error'); 
+        res.status(500).send('Internal Server Error');
     }
 });
 
@@ -48,7 +48,7 @@ app.get("/loginadmin", async (req, res) => {
     const password = req.query.password;
 
     if (password === process.env.ADMIN_PASSWORD) {
-        return res.redirect(/dashboard?password=${password});
+        return res.redirect(`/dashboard?password=${password}`);
     }
 
     try {
@@ -87,8 +87,8 @@ app.get("/about", async (req, res) => {
     }
 });
 
-app.get("/contact", async (req, res) => {
-    const filePath = path.join(process.cwd(), 'contact.html');
+app.get("/about", async (req, res) => {
+    const filePath = path.join(process.cwd(), 'about.html');
     try {
         const file = await fs.promises.readFile(filePath, 'utf8');
         const topbar = await readTopbar();
@@ -108,7 +108,7 @@ app.get("/create_post", async (req, res) => {
         try {
             const docRef = db.collection('posts').doc(encodeURIComponent(title));
             const date = new Date();
-            const timestamp_string = ${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')};
+            const timestamp_string = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
             await docRef.set({
                 title: encodeURIComponent(title),
                 content: encodeURIComponent(content),
@@ -153,14 +153,14 @@ app.get("/posts", async (req, res) => {
         querySnapshot.forEach(doc => {
             const post = doc.data();
             content += 
-            <a href="/post?id=${encodeURIComponent(post.title)}" style="text-decoration: none;">
+            `<a href="/post?id=${encodeURIComponent(post.title)}" style="text-decoration: none;">
                 <div class="post">
                     <h2 style="margin: 0; color: #cccccc;">${decodeURIComponent(post.title)}</h2>
                     <h6 style="margin: 0; color: #999999; padding-top: 10px">${decodeURIComponent(post.timestamp)}</h6>
                     <br>
                     <img src="${decodeURIComponent(post.image)}" style="width: 280px; height: 280px; border-radius: 8px;">
                 </div>
-            </a>;
+            </a>`;
         });
 
         res.type('html').send(content);
@@ -205,6 +205,6 @@ app.listen(PORT, (err) => {
     if (err) {
         console.error("Server error:", err);
     } else {
-        console.log(Listening on port ${PORT});
+        console.log(`Listening on port ${PORT}`);
     }
 });
