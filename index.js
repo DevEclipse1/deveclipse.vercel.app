@@ -87,8 +87,8 @@ app.get("/about", async (req, res) => {
     }
 });
 
-app.get("/about", async (req, res) => {
-    const filePath = path.join(process.cwd(), 'about.html');
+app.get("/contact", async (req, res) => {
+    const filePath = path.join(process.cwd(), 'contact.html');
     try {
         const file = await fs.promises.readFile(filePath, 'utf8');
         const topbar = await readTopbar();
