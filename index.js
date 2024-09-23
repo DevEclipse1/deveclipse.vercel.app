@@ -28,26 +28,32 @@ const db = admin.firestore();
 const app = express();
 app.use(express.json());
 
-app.get("/", (req, res) => {
+const readTopbar = () => {
+    return fs.promises.readFile(path.join(process.cwd(), 'topbar.html'), 'utf8');
+};
+
+app.get("/", async (req, res) => {
     const filePath = path.join(process.cwd(), 'index.html');
-    fs.readFile(filePath, 'utf8', (err, file) => {
-        if (err) {
-            return res.status(500).send('Internal Server Error');
-        }
-        res.type('html').send(file);
-    });
+    try {
+        const file = await fs.promises.readFile(filePath, 'utf8');
+        const topbar = await readTopbar();
+        res.type('html').send(topbar + file);
+    } catch (err) {
+        res.status(500).send('Internal Server Error');
+    }
 });
 
-app.get("/dashboard", (req, res) => {
+app.get("/dashboard", async (req, res) => {
     const password = req.query.password;
     if (password === process.env.ADMIN_PASSWORD) {
         const filePath = path.join(process.cwd(), 'dashboard.html');
-        fs.readFile(filePath, 'utf8', (err, file) => {
-            if (err) {
-                return res.status(500).send('Internal Server Error');
-            }
-            res.type('html').send(file);
-        });
+        try {
+            const file = await fs.promises.readFile(filePath, 'utf8');
+            const topbar = await readTopbar();
+            res.type('html').send(topbar + file);
+        } catch (err) {
+            res.status(500).send('Internal Server Error');
+        }
     } else {
         res.status(403).send("Forbidden");
     }
@@ -57,17 +63,38 @@ app.get("/create_post", async (req, res) => {
     const password = req.query.password;
     const title = req.query.title;
     const content = req.query.content;
+    const image = req.query.image;
 
     if (password === process.env.ADMIN_PASSWORD) {
         try {
             const docRef = db.collection('posts').doc(encodeURIComponent(title));
+            const date = new Date();
+            const timestamp_string = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
             await docRef.set({
                 title: encodeURIComponent(title),
-                content: encodeURIComponent(content)
+                content: encodeURIComponent(content),
+                image: encodeURIComponent(image),
+                timestamp: timestamp_string
             });
             res.send("Created post");
         } catch (error) {
-            console.error(error);
+            res.status(500).send('Internal Server Error');
+        }
+    } else {
+        res.status(403).send("Forbidden");
+    }
+});
+
+app.get("/delete_post", async (req, res) => {
+    const password = req.query.password;
+    const title = req.query.title;
+
+    if (password === process.env.ADMIN_PASSWORD) {
+        try {
+            const docRef = db.collection('posts').doc(encodeURIComponent(title));
+            await docRef.delete();
+            res.send("Deleted post");
+        } catch (error) {
             res.status(500).send('Internal Server Error');
         }
     } else {
@@ -78,32 +105,29 @@ app.get("/create_post", async (req, res) => {
 app.get("/posts", async (req, res) => {
     const filePath = path.join(process.cwd(), 'posts.html');
     
-    fs.readFile(filePath, 'utf8', async (err, file) => {
-        if (err) {
-            return res.status(500).send('Internal Server Error');
-        }
+    try {
+        const file = await fs.promises.readFile(filePath, 'utf8');
+        const topbar = await readTopbar();
+        let content = topbar + file;
 
-        let content = file;
+        const querySnapshot = await db.collection("posts").get();
+        querySnapshot.forEach(doc => {
+            const post = doc.data();
+            content += 
+            `<a href="/post?id=${encodeURIComponent(post.title)}" style="text-decoration: none;">
+                <div class="post">
+                    <h2 style="margin: 0; color: #cccccc;">${decodeURIComponent(post.title)}</h2>
+                    <h6 style="margin: 0; color: #999999; padding-top: 10px">${decodeURIComponent(post.timestamp)}</h6>
+                    <br>
+                    <img src="${decodeURIComponent(post.image)}" style="width: 280px; height: 280px; border-radius: 8px;">
+                </div>
+            </a>`;
+        });
 
-        try {
-            const querySnapshot = await db.collection("posts").get();
-            querySnapshot.forEach(doc => {
-                const post = doc.data();
-                
-                content += 
-                `<a href="/post?id=${encodeURIComponent(post.title)}" style="text-decoration: none;">
-                    <div style="display: inline-block; margin-right: 20px; background: #73737d; border-radius: 10px; padding: 20px">
-                        <h2 style="margin: 0;">${decodeURIComponent(post.title)}</h2>
-                        <p style="margin: 0;">${decodeURIComponent(post.content).split(' ').slice(0, 10).join(' ')}...</p>
-                    </div>
-                </a>`;
-             });
-
-            res.type('html').send(content);
-        } catch (error) {
-            res.status(500).send('Error fetching posts');
-        }
-    });
+        res.type('html').send(content);
+    } catch (error) {
+        res.status(500).send('Error fetching posts');
+    }
 });
 
 app.get("/post", async (req, res) => {
@@ -111,7 +135,8 @@ app.get("/post", async (req, res) => {
 
     try {
         const file = await fs.promises.readFile(filePath, 'utf8');
-        let content = file;
+        const topbar = await readTopbar();
+        let content = topbar + file;
 
         const postId = req.query.id;
 
@@ -127,16 +152,16 @@ app.get("/post", async (req, res) => {
 
         const post = doc.data();
         content = content.replace(/{{title}}/g, decodeURIComponent(post.title || 'No Title'))
-                        .replace(/{{body}}/g, decodeURIComponent(post.content || 'No Content'));
+                        .replace(/{{body}}/g, decodeURIComponent(post.content || 'No Content'))
+                        .replace(/{{timestamp}}/g, decodeURIComponent(post.timestamp || 'No Timestamp'));
 
         res.type('html').send(content);
     } catch (err) {
-        res.status(500).send('Internal Server Error: ' + err.message);
+        res.status(500).send('Internal Server Error');
     }
 });
 
-
-const PORT = 80
+const PORT = 80;
 app.listen(PORT, (err) => {
     if (err) {
         console.error("Server error:", err);

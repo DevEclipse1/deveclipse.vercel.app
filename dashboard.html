@@ -4,21 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        input, textarea, button {
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        form {
+            display: inline-block;
+            vertical-align: top;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin: 10px;
+            min-width: 300px;
+            box-sizing: border-box;
+        }
+        #password {
+            width: calc(100% - 20px);
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) {
+            form {
+                display: block;
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-    <form id="form">
-        <input id="password" type="text">
-        <input id="title" type="text">
-        <input id="content" type="text">
-        <input id="submit" type="submit">
+    <h1>Admin Dashboard</h1>
+
+    <input id="password" type="password" placeholder="Re-enter Password">
+
+    <form id="create_form">
+        <strong>Post Creation</strong>
+        <br>
+        <input id="title" type="text" placeholder="Title">
+        <input id="titleimage" type="text" placeholder="Title Image">
+        <textarea id="content" placeholder="Content" style="resize:none; width:95%; height:300px;"></textarea>
+        <input id="submit" type="submit" value="Create Post">
+    </form>
+
+    <form id="delete_form">
+        <strong>Post Deletion</strong>
+        <br>
+        <input id="dtitle" type="text" placeholder="Title">
+        <input id="dsubmit" type="submit" value="Delete Post">
     </form>
 
     <script>
         function callback(event) {
             event.preventDefault();
-            window.location = `/create_post?password=${document.getElementById("password").value}&title=${document.getElementById("title").value}&content=${document.getElementById("content").value}`;
+            window.location = `/create_post?password=${document.getElementById("password").value}&title=${document.getElementById("title").value}&content=${document.getElementById("content").value}&image=${document.getElementById("titleimage").value}`;
         }
-        document.getElementById("form").addEventListener("submit", callback, false);
+        document.getElementById("create_form").addEventListener("submit", callback, false);
+
+        function dcallback(event) {
+            event.preventDefault();
+            window.location = `/delete_post?password=${document.getElementById("password").value}&title=${document.getElementById("dtitle").value}`;
+        }
+        document.getElementById("delete_form").addEventListener("submit", dcallback, false);
     </script>
 </body>
 </html>

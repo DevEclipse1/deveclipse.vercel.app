@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deveclipse's blog</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #18181a;
+        }
+    </style>
 </head>
 <body>
     <form id="loginForm">
@@ -17,13 +26,6 @@
             window.location = `/dashboard?password=${document.getElementById("password").value}`;
         }
         document.getElementById("loginForm").addEventListener("submit", callback, false);
-
-        function view_posts()
-        {
-            window.location = "/posts"
-        }
     </script>
-
-    <button onclick="view_posts()">View Posts</button>
 </body>
 </html>
