@@ -110,7 +110,7 @@ app.get("/create_post", async (req, res) => {
             const date = new Date();
             const timestamp_string = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
             await docRef.set({
-                title: encodeURIComponent(title),
+                title: title,
                 content: encodeURIComponent(content),
                 image: encodeURIComponent(image),
                 timestamp: timestamp_string
