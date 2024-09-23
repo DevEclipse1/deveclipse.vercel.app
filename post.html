@@ -4,10 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #18181a;
+            color: white;
+        }
+        .container {
+            background-color: #1f1f23;
+            padding: 20px;
+            margin-left: 20px;
+            margin-top: 20px;
+            width: 95vw;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
-    <h1>{{title}}</h1>
-    <p>{{body}}</p>
-    <p>{{timestamp}}</p>
+    <div class="container">
+        <h1 style="margin: 100px;">Post: {{title}}</h1>
+        <p style="margin-left: 100px; margin-top: -40px;">{{body}}</p>
+        <p style="margin-left: 100px; margin-top: 200px;"><strong>{{timestamp}}</strong></p>
+    </div>
 </body>
 </html>

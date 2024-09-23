@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to admin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #18181a;
+        }
+        input, textarea, button {
+            padding: 10px;
+            margin: 10px;
+            border: 0;
+            border-radius: 12px;
+            background-color: #1f1f23;
+            outline: 1px solid #2d2d31;
+            caret-color: white;
+            color: white;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+        #loginForm {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #loginForm input {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <form id="loginForm">
+        <input id="password" type="password" placeholder="Password">
+        <input id="login" type="submit" value="Enter Admin Panel">
+    </form>
+
+    <script>
+        function callback(event) {
+            event.preventDefault();
+            window.location = `/dashboard?password=${document.getElementById("password").value}`;
+        }
+        document.getElementById("loginForm").addEventListener("submit", callback, false);
+    </script>
+</body>
+</html>

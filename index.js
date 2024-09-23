@@ -39,6 +39,23 @@ app.get("/", async (req, res) => {
         const topbar = await readTopbar();
         res.type('html').send(topbar + file);
     } catch (err) {
+        res.status(500).send('Internal Server Error'); 
+    }
+});
+
+app.get("/loginadmin", async (req, res) => {
+    const filePath = path.join(process.cwd(), 'adminlogin.html');
+    const password = req.query.password;
+
+    if (password === process.env.ADMIN_PASSWORD) {
+        return res.redirect(`/dashboard?password=${password}`);
+    }
+
+    try {
+        const file = await fs.promises.readFile(filePath, 'utf8');
+        const topbar = await readTopbar();
+        res.type('html').send(topbar + file);
+    } catch (err) {
         res.status(500).send('Internal Server Error');
     }
 });
@@ -55,7 +72,29 @@ app.get("/dashboard", async (req, res) => {
             res.status(500).send('Internal Server Error');
         }
     } else {
-        res.status(403).send("Forbidden");
+        res.redirect("/loginadmin");
+    }
+});
+
+app.get("/about", async (req, res) => {
+    const filePath = path.join(process.cwd(), 'about.html');
+    try {
+        const file = await fs.promises.readFile(filePath, 'utf8');
+        const topbar = await readTopbar();
+        res.type('html').send(topbar + file);
+    } catch (err) {
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.get("/contact", async (req, res) => {
+    const filePath = path.join(process.cwd(), 'contact.html');
+    try {
+        const file = await fs.promises.readFile(filePath, 'utf8');
+        const topbar = await readTopbar();
+        res.type('html').send(topbar + file);
+    } catch (err) {
+        res.status(500).send('Internal Server Error');
     }
 });
 
