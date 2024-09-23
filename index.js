@@ -171,13 +171,13 @@ app.get("/posts", async (req, res) => {
 
 app.get("/post", async (req, res) => {
     const filePath = path.join(process.cwd(), 'post.html');
-
+    
     try {
         const file = await fs.promises.readFile(filePath, 'utf8');
         const topbar = await readTopbar();
         let content = topbar + file;
 
-        const postId = req.query.id;
+        const postId = decodeURIComponent(req.query.id);
 
         if (!postId) {
             return res.status(400).send('Post ID is required');
